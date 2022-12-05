@@ -1,0 +1,41 @@
+#!/usr/bin/env python3
+
+def main():
+    f = open("code.txt", "r")
+    txt = f.read()
+    file = open("move.txt", "r")
+    move = file.read()
+    x = txt.split("\n")
+    l = move.split("\n")
+    stack = []
+    for i in range(0, len(x)):
+        stack.append([])
+        for d in range(0, len(x[i])):
+            if (x[i][d] == '['):
+                if x[i][d+1] != ' ':
+                    stack[i].append(x[i][d + 1])
+    b = [[]]
+    tot = []
+    for h in range(0, len(l)):
+        tot.append(l[h].split(' '))
+    for h in range(0, len(tot)):
+        tot[h].pop(0)
+        tot[h].pop(1)
+        tot[h].pop(2)
+    for k in range(0, len(tot)):
+        for t in range(0, int(tot[k][0])):
+            if (len(stack[int(tot[k][1]) -1]) != 0):
+                stack[int(tot[k][2])-1].insert(0, stack[int(tot[k][1])-1][int(tot[k][0]) - t-1])
+                stack[int(tot[k][1])-1].pop(int(tot[k][0]) - t -1)
+                print(stack[int(tot[k][2])-1])
+    str1 = ''
+    for g in range(0, len(stack)):
+        str1 += stack[g][0]
+    print(str1)
+main()
+
+
+#           if (len(stack[int(tot[k][1]) -1]) != 0):
+#               print(stack[int(tot[k][1])-1])
+#                stack[int(tot[k][2])-1].insert(0, stack[int(tot[k][1])-1][0])
+#                stack[int(tot[k][1])-1].pop(0)

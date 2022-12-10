@@ -1,7 +1,156 @@
 #!/usr/bin/env python3
 
-def main():
+def p1():
     f = open("code.txt", "r")
     txt = f.read()
+    map = txt.split('\n')
+    visible = True
+    total=0
+    blocked=0
+    for i in range(1, len(map)-1):
+        for d in range(1, len(map[i])-1):
+            for h in range(i-1, -1, -1):
+                if (map[i][d] <= map[h][d]):
+                    visible=False
+                    break
+            if (visible == False):
+                visible=True
+                for h in range(d+1, len(map[i])):
+                    if (map[i][d] <= map[i][h]):
+                        visible=False
+                        break
+                if (visible == False):
+                    visible=True
+                    for h in range(d-1, -1, -1):
+                        if (map[i][d] <= map[i][h]):
+                            visible=False
+                            break
+                    if (visible == False):
+                        visible=True
+                        for h in range(i+1, len(map)):
+                            if (map[i][d] <= map[h][d]):
+                                visible=False
+                                break
+                        if (visible == False):
+                            visible=True
+                        else:
+                            #print('from bottom [' + str(i) + '][' + str(d) + '] ')
+                            total+=1
+                    else:
+                    #    print('from left [' + str(i) + '][' + str(d) + '] ')
+                        total+=1
+                else:
+                    #print('from right [' + str(i) + '][' + str(d) + '] ')
+                    total+=1
+            else:
+                #print('from top [' + str(i) + '][' + str(d) + '] ')
+                total+=1
+    print(total+(len(map)*4) - 4)
 
-main()
+def p2():
+    f = open("code.txt", "r")
+    txt = f.read()
+    map = txt.split('\n')
+    visibleTop = True
+    visibleRight = True
+    visibleLeft = True
+    visibleBottom = True
+    total=0
+    blockedTop=0
+    blockedBottom=0
+    blockedRight=0
+    blockedLeft=0
+    max=0
+    for i in range(0, len(map)):
+        for d in range(0, len(map[i])):
+            if i >= 1:
+                for h in range(i-1, -1, -1):
+                    visibleTop = True
+                    if (map[i][d] <= map[h][d]):
+                        blockedTop = (i-h)
+                        #print('visibletop [' + str(i) + ']['+ str(d)+'] compared to [' + str(h) + '][' + str(d)+ ']block ' + str(blocked))
+                        visibleTop=False
+                        break
+                if (visibleTop == True):
+                    blockedTop = i
+            else:
+                blockedTop = 0
+            if d < len(map[i])-1:
+                for h in range(d+1, len(map[i])):
+                    visibleRight = True
+                    if (map[i][d] <= map[i][h]):
+                        blockedRight =h-d
+                        #print('top [' + str(i) + ']['+ str(d)+'] compared to [' + str(h) + '][' + str(d)+ ']block ' + str(blocked))
+                        visibleRight=False
+                        break
+                if (visibleRight == True):
+                    blockedRight =(len(map[i])-d-1)
+            else:
+                blockedRight =0
+            if d >= 1:
+                for h in range(d-1, -1, -1):
+                    visibleLeft = True
+                    if (map[i][d] <= map[i][h]):
+                        blockedLeft =(d-h)
+                        #print('visibleLeft [' + str(i) + ']['+ str(d)+'] compared to [' + str(h) + '][' + str(d)+ ']block ' + str(blocked))
+                        visibleLeft=False
+                        break
+                if (visibleLeft == True):
+                    blockedLeft=d
+            else:
+                blockedLeft =0
+            if i < len(map)-1:
+                for h in range(i+1, len(map)):
+                    visibleBottom = True
+                    if (map[i][d] <= map[h][d]):
+                        blockedBottom = (h-i)
+                        #print('visibleBottom [' + str(i) + ']['+ str(d)+'] compared to [' + str(h) + '][' + str(d)+ ']block ' + str(blocked))
+                        visibleBottom=False
+                        break
+                if (visibleBottom == True):
+                    blockedBottom = len(map) - i - 1
+            else:
+                blockedBottom = 0
+
+            #for h in range(i+1, len(map)):
+            #    if (map[i][d] <= map[h][d]):
+            #        blocked=i-h
+            #        #print('top [' + str(i) + ']['+ str(d)+'] compared to [' + str(h) + '][' + str(d)+ ']block ' + str(blocked))
+            #        visible=False
+            #        break
+            #if (visible == True):
+            #    blocked=i
+            #    visible=False
+            if (blockedTop*blockedLeft*blockedRight*blockedBottom >= max):
+                max = blockedTop*blockedLeft*blockedRight*blockedBottom
+    print(max)                # for h in range(d+1, len(map[i])):
+                #     if (map[i][d] <= map[i][h]):
+                #         visible=False
+                #         break
+                # if (visible == False):
+                #     visible=True
+                #     for h in range(d-1, -1, -1):
+                #         if (map[i][d] <= map[i][h]):
+                #             visible=False
+                #             break
+                #     if (visible == False):
+                #         visible=True
+                #         for h in range(i+1, len(map)):
+                #             if (map[i][d] <= map[h][d]):
+                #                 visible=False
+                #                 break
+                #         if (visible == False):
+                #             visible=True
+                #         else:
+                #             #print('from bottom [' + str(i) + '][' + str(d) + '] ')
+                #             total+=1
+                #     else:
+                #     #    print('from left [' + str(i) + '][' + str(d) + '] ')
+                #         total+=1
+                # else:
+                #     #print('from right [' + str(i) + '][' + str(d) + '] ')
+                #     total+=1
+                #print("not block: " + str(blocked))
+                #print('from top [' + str(i) + '][' + str(d) + '] ')
+
+p2()

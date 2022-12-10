@@ -1,0 +1,69 @@
+#!/usr/bin/env python3
+
+def main():
+    f = open("code.txt", "r")
+    txt = f.read()
+    map = txt.split('\n')
+    passedLeft=[]
+    passedTop=[]
+    for i in range(1, len(map)-1):
+        for j in range(1, len(map[i])-1):
+            if (map[i][j] > map[i][j - 1]):
+                print(end='')
+                #print('left: [' + str(i) + '][' + str(j)+']')
+            else:
+                passedLeft.append(j-1)
+                break
+    a = []
+    for i in range(0, len(map)):
+        a.append([row[i] for row in map])
+        for j in range(1, len(a[i])-1):
+            if i == 0 or i == len(map)-1:
+                break
+            if (a[i][j] > a[i][j-1]):
+                #print('over: ' + str(a[i][j]) + ' > ' + str(a[i][j-1]))
+                print(end='')
+            else:
+                passedTop.append(j-1)
+                break
+    b = []
+    passedBottom = []
+    for i in range(0, len(map)):
+        b.append([rowb[i] for rowb in map])
+        b[i] = b[i][::-1]
+        for j in range(1, len(b[i])-1):
+            if i == 0 or i == len(map)-1:
+                break
+            if (b[i][j] > b[i][j-1]):
+                #print('over: ' + str(b[i][j]) + ' > ' + str(b[i][j-1]))
+                print(end='')
+            else:
+                passedBottom.append(j-1)
+                break
+    c = map
+    passedRight = []
+    for i in range(0, len(map)):
+        c[i] = c[i][::-1]
+        for j in range(1, len(c[i])-1):
+            if i == 0 or i == len(map)-1:
+                print("break")
+                break
+            if (c[i][j] > c[i][j - 1]):
+                print('left: [' + str(i) + '][' + str(j)+']')
+                print(end='')
+            else:
+                passedRight.append(j-1)
+                break
+    tot = len(map[0])*2 + len(map)*2 - 4
+    print(passedTop)
+    print(passedLeft)
+    print(passedRight)
+    print(passedBottom)
+    for i in range(0, len(passedBottom)):
+        tot += passedTop[i]
+        tot += passedLeft[i]
+        tot += passedRight[i]
+        tot += passedBottom[i]
+    print(tot)
+
+main()

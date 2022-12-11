@@ -3,5 +3,54 @@
 def main():
     f = open("code.txt", "r")
     txt = f.read()
+    tot = txt.split('\n')
+    cycle = 0
+    instruct = []
+    for i in range(len(tot)):
+        instruct.append(tot[i].split(' '))
+    print(instruct[0][0])
+    temp1 = [[0, 0]]
+    temp2 = [0, 0]
+    temp3 = [0, 0]
+    register=1
+    d=0
+    total=0
+    passed=False
+    tempCycle= 0
+    for i in range(0, len(instruct)):
+        tempCycle = cycle
+        if ((cycle == 21 or cycle == 61 or cycle == 101 or cycle == 141 or cycle == 181 or cycle == 221) and passed == False):
+            total += (cycle-1)*register
+            passed=True
+        while d < len(temp1):
+            if (temp1[d][1] == i - 3 and d != 0):
+                #print(temp1[d][0], end=" + ")
+                register += temp1[d][0]
+                cycle+=1
+                if ((cycle == 21 or cycle == 61 or cycle == 101 or cycle == 141 or cycle == 181 or cycle == 221) and passed == False):
+                    total += (cycle-1)*register
+                    passed=True
+                temp1.pop(d)
+                d -= 2
+            d+=1
+        d=0
+        if (instruct[i][0] == 'noop'):
+            #print("1", end=" + ")
+            # if ((cycle == 21 or cycle == 61 or cycle == 101 or cycle == 141 or cycle == 181 or cycle == 221) and passed == False):
+            #     total += (cycle-1)*register
+            #     print(cycle, (cycle-1)*register)
+            #     passed=True
+            cycle+=1
+        else:
+            temp1.append([int(instruct[i][1]), i])
+            cycle+=1
+            #if ((cycle == 21 or cycle == 61 or cycle == 101 or cycle == 141 or cycle == 181 or cycle == 221) and passed == False):
+            #    total += (cycle-1)*register
+            #    print(cycle, (cycle-1)*register)
+            #    passed=True
+        passed= False
+        #print(cycle, register)
+    print(temp1)
+    print(total)
 
 main()

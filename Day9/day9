@@ -15,44 +15,79 @@ class Coord(IntEnum):
 
 def checkAround(headPos, tailPos, coord: Coord, dir: Dir):
     if (tailPos[coord.X]+2 == headPos[coord.X]):
-        if (tailPos[coord.Y]-1 == headPos[coord.Y]):
+        if (tailPos[coord.Y]-1 == headPos[coord.Y] or tailPos[coord.Y]-2 == headPos[coord.Y]):
             tailPos[0] += dir.RIGHT
             tailPos[1] += dir.UP
         elif (tailPos[coord.Y] == headPos[coord.Y]):
             tailPos[0] += dir.RIGHT
-        elif (tailPos[coord.Y]+1 == headPos[coord.Y]):
+        elif (tailPos[coord.Y]+1 == headPos[coord.Y] or tailPos[coord.Y]+2 == headPos[coord.Y]):
             tailPos[0] += dir.RIGHT
             tailPos[1] += dir.DOWN
     elif (tailPos[coord.X]-2 == headPos[coord.X]):
-        if (tailPos[coord.Y]-1 == headPos[coord.Y]):
+        if (tailPos[coord.Y]-1 == headPos[coord.Y] or tailPos[coord.Y]-2 == headPos[coord.Y]):
             tailPos[0] += dir.LEFT
             tailPos[1] += dir.UP
         elif (tailPos[coord.Y] == headPos[coord.Y]):
             tailPos[0] += dir.LEFT
-        elif (tailPos[coord.Y]+1 == headPos[coord.Y]):
+        elif (tailPos[coord.Y]+1 == headPos[coord.Y] or tailPos[coord.Y]+2 == headPos[coord.Y]):
             tailPos[0] += dir.LEFT
             tailPos[1] += dir.DOWN
     elif (tailPos[coord.Y]+2 == headPos[coord.Y]):
-        if (tailPos[coord.X]-1 == headPos[coord.X]):
+        if (tailPos[coord.X]-1 == headPos[coord.X] or tailPos[coord.X]-2 == headPos[coord.X]):
             tailPos[1] += dir.DOWN
             tailPos[0] += dir.LEFT
         elif (tailPos[coord.X] == headPos[coord.X]):
             tailPos[1] += dir.DOWN
-        elif (tailPos[coord.X]+1 == headPos[coord.X]):
+        elif (tailPos[coord.X]+1 == headPos[coord.X] or tailPos[coord.X]+2 == headPos[coord.X]):
             tailPos[1] += dir.DOWN
             tailPos[0] += dir.RIGHT
     elif (tailPos[coord.Y]-2 == headPos[coord.Y]):
-        if (tailPos[coord.X]-1 == headPos[coord.X]):
+        if (tailPos[coord.X]-1 == headPos[coord.X] or tailPos[coord.X]-2 == headPos[coord.X]):
             tailPos[1] += dir.UP
             tailPos[0] += dir.LEFT
         elif (tailPos[coord.X] == headPos[coord.X]):
             tailPos[1] += dir.UP
-        elif (tailPos[coord.X]+1 == headPos[coord.X]):
+        elif (tailPos[coord.X]+1 == headPos[coord.X] or tailPos[coord.X]+2 == headPos[coord.X]):
             tailPos[1] += dir.UP
             tailPos[0] += dir.RIGHT
     return tailPos
 
-def main():
+def p2():
+    f = open("code.txt", "r")
+    txt = f.read()
+    dirs = txt.split('\n')
+    direct = []
+    dir = Dir
+    coord = Coord
+    headPos = [0, 0]
+    tailPos = [0,0]
+    snake = [headPos] + [[0,0]] + [[0,0]] + [[0,0]] + [[0,0]] + [[0,0]] + [[0,0]] + [[0,0]] + [[0,0]] + [[0,0]]
+    for i in range(0, len(dirs)):
+        direct.append(dirs[i].split(' '))
+    direction = []
+    tuplePos = (0, 0)
+    pos= [tuplePos]
+    for i in range(0, len(direct)):
+        for d in range(0, int(direct[i][1])):
+            direction.append(direct[i][0])
+    for t in range(len(direction)):
+        if (direction[t][0] == 'L'):
+            headPos[coord.X] += dir.LEFT
+        if (direction[t][0] == 'R'):
+            headPos[coord.X] += dir.RIGHT
+        if (direction[t][0] == 'U'):
+            headPos[coord.Y] += dir.UP
+        if (direction[t][0] == 'D'):
+            headPos[coord.Y] += dir.DOWN
+        snake[0] = headPos
+        for h in range(1, 10):
+            snake[h] = checkAround(snake[h-1], snake[h], coord, dir)
+        tuplePos = tuple(v for v in snake[9])
+        if (tuplePos not in pos):
+            pos.append(tuplePos)
+    print('final= ',str(len(pos)))
+
+def p1():
     f = open("code.txt", "r")
     txt = f.read()
     dirs = txt.split('\n')
@@ -82,20 +117,6 @@ def main():
         tuplePos = tuple(v for v in tailPos)
         if (tuplePos not in pos):
             pos.append(tuplePos)
-    print(pos)
-    print('final= ', str(headPos) , str(tailPos), ' with a total of', str(len(pos)))
-main()
+    print('final= ',str(len(pos)))
 
-#pos=[(0,0)]
-#b=[1,1]
-#y=[0,1]
-#a = len(pos)
-#print(a)
-#x = tuple(i for i in b)
-#for i in range(0, a):
-#    if (x not in pos):
-#        print("append", str(x))
-#        pos.append([x])
-#        print(pos)
-##     pos.append([i,i])
-#print(pos)
+p1()

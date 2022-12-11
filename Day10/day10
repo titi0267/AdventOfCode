@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-def main():
+def p1():
     f = open("code.txt", "r")
     txt = f.read()
     tot = txt.split('\n')
@@ -53,4 +53,50 @@ def main():
     print(temp1)
     print(total)
 
-main()
+def p2():
+    f = open("code.txt", "r")
+    txt = f.read()
+    tot = txt.split('\n')
+    cycle = 0
+    instruct = []
+    for i in range(len(tot)):
+        instruct.append(tot[i].split(' '))
+    print(instruct[0][0])
+    temp1 = [[0, 0]]
+    register=1
+    d=0
+    total=0
+    passed=False
+    crt=[]
+    image='.'*40
+    finalImg = ['','', '', '', '', '', '', '', '', '', '', '', '', '', '']
+    nextLine=0
+    for i in range(0, len(instruct)):
+        while d < len(temp1):
+            if (temp1[d][1] == i - 2 and d != 0):
+                register += temp1[d][0]
+                cycle+=1
+                image='.'*40
+                image = image[:register-1] + '###' + image[register+2:]
+                finalImg[nextLine] += image[cycle-1]
+                if len(finalImg[nextLine])==40:
+                    cycle-=40
+                    nextLine+=1
+                temp1.pop(d)
+                d -= 2
+            d+=1
+        d=0
+        if (instruct[i][0] != 'noop'):
+            temp1.append([int(instruct[i][1]), i])
+        cycle+=1
+        image='.'*40
+        image = image[:register-1] + '###' + image[register+2:]
+        finalImg [nextLine]+= image[cycle-1]
+        if len(finalImg[nextLine])==40:
+            cycle-=40
+            nextLine+=1
+    for l in range(0, len(finalImg)):
+        print(finalImg[l])
+    print(total)
+
+p2()

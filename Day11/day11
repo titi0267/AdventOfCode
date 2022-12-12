@@ -1,7 +1,107 @@
 #!/usr/bin/env python3
+import operator
+import math
 
-def main():
+ops = {
+    '+' : operator.add,
+    '-' : operator.sub,
+    '*' : operator.mul,
+    '/' : operator.truediv,  # use operator.div for Python 2
+}
+
+def strExpr(op1, oper, op2):
+    op1, op2 = int(op1), int(op2)
+    return ops[oper](op1, op2)
+
+def p1():
     f = open("code.txt", "r")
     txt = f.read()
+    totMonkeys = txt.split('\n\n')
+    monkeys = []
+    for i in range(0, len(totMonkeys)):
+        monkeys.append(totMonkeys[i].split('\n'))
+    for i in range(0, len(monkeys)):
+        monkeys[i].pop(0)
+        for d in range(len(monkeys[i])):
+            if (monkeys[i][d].find('  Test: divisible by ') != -1):
+                monkeys[i][d] = monkeys[i][d][len('  Test: divisible by '):]
+            if (monkeys[i][d].find('  Starting items: ') != -1):
+                monkeys[i][d] = monkeys[i][d][len('  Starting items: '):]
+            if (monkeys[i][d].find('  Operation: new = old ') != -1):
+                monkeys[i][d] = monkeys[i][d][len('  Operation: new = old '):]
+            if (monkeys[i][d].find('    If false: throw to monkey ') != -1):
+                monkeys[i][d] = monkeys[i][d][len('    If false: throw to monkey '):]
+            if (monkeys[i][d].find('    If true: throw to monkey ') != -1):
+                monkeys[i][d] = monkeys[i][d][len('    If true: throw to monkey '):]
+        monkeys[i][0] = monkeys[i][0].split(', ')
+        monkeys[i][1]= monkeys[i][1].split(' ')
+    worryLvl = 0
+    totalItemMonkey = []
+    for i in range(0, len(monkeys)):
+        totalItemMonkey.append(0)
+    for j in range(0, 20):
+        for i in range(0, len(monkeys)): #round
+            d = 0
+            while d < len(monkeys[i][0]):#items
+                totalItemMonkey[i] += 1
+                worryLvlBase = monkeys[i][0][d]
+                if (monkeys[i][1][1] == 'old'):
+                    worryLvl = strExpr(monkeys[i][0][d], monkeys[i][1][0], worryLvlBase)
+                else:
+                    worryLvl = strExpr(monkeys[i][0][d], monkeys[i][1][0], monkeys[i][1][1])
+                if (math.floor(worryLvl/3) % int(monkeys[i][2]) == 0):
+                    monkeys[int(monkeys[i][3])][0].append(math.floor(worryLvl/3))
+                else:
+                    monkeys[int(monkeys[i][4])][0].append(math.floor(worryLvl/3))
+                monkeys[i][0].pop(0)
+    totalItemMonkey.sort(reverse=True)
+    print(totalItemMonkey[0]*totalItemMonkey[1])
+p1()
 
-main()
+def p2():
+    f = open("code.txt", "r")
+    txt = f.read()
+    totMonkeys = txt.split('\n\n')
+    monkeys = []
+    for i in range(0, len(totMonkeys)):
+        monkeys.append(totMonkeys[i].split('\n'))
+    for i in range(0, len(monkeys)):
+        monkeys[i].pop(0)
+        for d in range(len(monkeys[i])):
+            if (monkeys[i][d].find('  Test: divisible by ') != -1):
+                monkeys[i][d] = monkeys[i][d][len('  Test: divisible by '):]
+            if (monkeys[i][d].find('  Starting items: ') != -1):
+                monkeys[i][d] = monkeys[i][d][len('  Starting items: '):]
+            if (monkeys[i][d].find('  Operation: new = old ') != -1):
+                monkeys[i][d] = monkeys[i][d][len('  Operation: new = old '):]
+            if (monkeys[i][d].find('    If false: throw to monkey ') != -1):
+                monkeys[i][d] = monkeys[i][d][len('    If false: throw to monkey '):]
+            if (monkeys[i][d].find('    If true: throw to monkey ') != -1):
+                monkeys[i][d] = monkeys[i][d][len('    If true: throw to monkey '):]
+        monkeys[i][0] = monkeys[i][0].split(', ')
+        monkeys[i][1]= monkeys[i][1].split(' ')
+    worryLvl = 0
+    totalItemMonkey = []
+    for i in range(0, len(monkeys)):
+        totalItemMonkey.append(0)
+    wtf = 1
+    for i in range(len(monkeys)):
+        wtf *= int(monkeys[i][2])
+    for j in range(0, 10000):
+        for i in range(0, len(monkeys)): #round
+            d = 0
+            while d < len(monkeys[i][0]):#items
+                totalItemMonkey[i] += 1
+                worryLvlBase = monkeys[i][0][d]
+                if (monkeys[i][1][1] == 'old'):
+                    worryLvl = strExpr(monkeys[i][0][d], monkeys[i][1][0], worryLvlBase)
+                else:
+                    worryLvl = strExpr(monkeys[i][0][d], monkeys[i][1][0], monkeys[i][1][1])
+                if (math.floor(worryLvl%wtf) % int(monkeys[i][2]) == 0):
+                    monkeys[int(monkeys[i][3])][0].append(math.floor(worryLvl%wtf))
+                else:
+                    monkeys[int(monkeys[i][4])][0].append(math.floor(worryLvl%wtf))
+                monkeys[i][0].pop(0)
+    totalItemMonkey.sort(reverse=True)
+    print(totalItemMonkey[0]*totalItemMonkey[1])
+p2()

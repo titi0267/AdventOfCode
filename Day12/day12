@@ -1,7 +1,64 @@
 #!/usr/bin/env python3
 
-def main():
+def p1():
     f = open("code.txt", "r")
     txt = f.read()
+    map = txt.splitlines()
+    for i in range(len(map)):
+        if (map[i].find('S') != -1):
+            sPos = (map[i].find('S'), i)
+            map[sPos[1]] = map[sPos[1]].replace('S', 'a')
+        if (map[i].find('E') != -1):
+            ePos = (map[i].find('E'), i)
+            map[ePos[1]] = map[ePos[1]].replace('E', 'z')
+    pos = [(0, sPos[0], sPos[1])]
+    passed = [sPos]
+    while pos:
+        dist = pos[0][0]
+        posX = pos[0][1]
+        posY = pos[0][2]
+        pos.pop(0)
+        for nextPosX, nextPosY in [(posX+1, posY), (posX -1, posY), (posX, posY-1), (posX, posY+1)]:
+            if ((nextPosX, nextPosY) in passed or nextPosX < 0 or nextPosX >= len(map[0]) or nextPosY < 0 or nextPosY >= len(map)):
+                continue
+            if (ord(map[nextPosY][nextPosX]) - ord(map[posY][posX]) > 1):# and ord(map[nextPosY][nextPosX]) != ord(map[posY][posX]) and ord(map[nextPosY][nextPosX]) != ord(map[posY][posX]) + 1):
+                continue
+            if (nextPosX == ePos[0] and nextPosY == ePos[1]):
+                print(dist+1)
+                exit()
+            passed.append((nextPosX, nextPosY))
+            pos.append((dist+1, nextPosX, nextPosY))
 
-main()
+def p2():
+    f = open("code.txt", "r")
+    txt = f.read()
+    map = txt.splitlines()
+    for i in range(len(map)):
+        if (map[i].find('S') != -1):
+            sPos = (map[i].find('S'), i)
+            map[sPos[1]] = map[sPos[1]].replace('S', 'a')
+        if (map[i].find('E') != -1):
+            ePos = (map[i].find('E'), i)
+            map[ePos[1]] = map[ePos[1]].replace('E', 'z')
+    pos = [(0, sPos[0], sPos[1])]
+    passed = [sPos]
+    while pos:
+        dist = pos[0][0]
+        posX = pos[0][1]
+        posY = pos[0][2]
+        pos.pop(0)
+        for nextPosX, nextPosY in [(posX+1, posY), (posX -1, posY), (posX, posY-1), (posX, posY+1)]:
+            if ((nextPosX, nextPosY) in passed or nextPosX < 0 or nextPosX >= len(map[0]) or nextPosY < 0 or nextPosY >= len(map)):
+                continue
+            if (ord(map[nextPosY][nextPosX]) - ord(map[posY][posX]) > 1):# and ord(map[nextPosY][nextPosX]) != ord(map[posY][posX]) and ord(map[nextPosY][nextPosX]) != ord(map[posY][posX]) + 1):
+                continue
+            if (nextPosX == ePos[0] and nextPosY == ePos[1]):
+                print(dist)
+                exit()
+            passed.append((nextPosX, nextPosY))
+            if (map[nextPosY][nextPosX] == 'a'):
+                pos.append((dist, nextPosX, nextPosY))
+                continue
+            pos.append((dist+1, nextPosX, nextPosY))
+
+p1()

@@ -6,7 +6,6 @@ ops = {
     '+' : operator.add,
     '-' : operator.sub,
     '*' : operator.mul,
-    '/' : operator.truediv,  # use operator.div for Python 2
 }
 
 def strExpr(op1, oper, op2):

@@ -30,4 +30,4 @@ def p2():
                 print(len(str2))
                 exit()
 
-p1()
+p2()

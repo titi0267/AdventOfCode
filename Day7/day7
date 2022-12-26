@@ -1,7 +1,96 @@
 #!/usr/bin/env python3
 
+from anytree import Node, RenderTree, AsciiStyle, Walker, find_by_attr, find
+
 def main():
     f = open("code.txt", "r")
     txt = f.read()
+    t = txt.split('\n')
+    arb = [[]]
+    g = 0
+    for i in range(0, len(t)):
+        if ("$ cd" in t[i]):
+            str1 = t[i]
+            arb.append([str1[5:]])
+            g+=1
+        if ("$ ls" in t[i]):
+            for d in range(0, 100):
+                if ("$ cd" in t[i + d]):
+                    break
+                if ("dir" in t[i + d] or "$ ls" in t[i+d]):
+                    continue
+                else:
+                    #print(i)
+                    arb[g].append(t[i + d])
+                if ("$ cd" in t[i + d] or i + d >= len(t)-1):
+                    break
+    tot: Node = []
+    tot.append([])
+    h = 0
+    j = 0
+    rev = 0
+    sz   = 0
+    print(arb)
+    try :
+        for i in range(1, len(arb)):
+            if (arb[i][0] == '/'):
+                for e in range(1, len(arb[i])):
+                    sz += int(arb[i][e].split(' ')[0])
+                print(sz)
+                tot[h] = Node('root', total=sz)
+                print("First node " + str(tot[h]) + " h = " + str(h))
+                sz = 0
+                h+=1
+            if (arb[i][0] != '/' and arb[i][0] != '..'):
+                if (arb[i - 1][0] != '..'):
+                    for e in range(1, len(arb[i])):
+                        sz += int(arb[i][e].split(' ')[0])
+                    if (h - rev == 1):
+                        rev = 0
+                        tot.insert(1, Node(arb[i][0], parent=tot[0], total=sz))
+                    else:
+                        tot[h] = Node(arb[i][0], parent=tot[h-1], total=sz)
+                        print("A " + str(tot[h]) + ' & parent ' + str(tot[h-1]) +" rev =" + str(h - rev))
+                    sz=0
+                    h += 1
+                else:
+                    for k in range(i-1, 0, -1):
+                        j -= 1
+                        if (arb[k][0] != '..'):
+                            break
+                        rev += 1
+                        print("rev = " + str(rev))
+                    for e in range(1, len(arb[i])):
+                        sz += int(arb[i][e].split(' ')[0])
+                    if (h - rev -1  == 0):
+                        tot[h] = Node(arb[i][0], parent=tot[0], total=sz)
+                    else:
+                        tot[h] = Node(arb[i][0], parent=tot[h - rev -1 ], total=sz)
+                    print("B " + str(tot[h]) + ' & parent ' + str(tot[h - rev-1]) +" rev =" + str(rev))
+                    sz=0
+                    h+= 1
+                    j = 0
+            if (arb[i][0] == '..'):
+                continue
+            tot.append([])
+    except IndexError:
+        print('o')
+    print(RenderTree(tot[0], style=AsciiStyle()))
 
+    finalP1 = 0
+    totForFolder= 0
+    #print(tot[38])
+    for q in range(0, len(tot)-1):
+        child = tot[q].descendants
+        totForFolder += int(tot[q].__dict__.get('total'))
+        for m in range(0, len(child)):
+            #print(child[m])
+            #print('childs of '+ str(tot[q]) + ' => ' + str(child[m]))
+            totForFolder += int(child[m].__dict__.get('total'))
+        if (totForFolder < 100000):
+            #print(str(tot[q]) + ' & ' + str(totForFolder))
+            finalP1 += totForFolder
+        totForFolder = 0
+    print(RenderTree(tot[0], style=AsciiStyle()))
+    print(finalP1)
 main()

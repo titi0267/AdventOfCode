@@ -1,7 +1,0 @@
-#!/usr/bin/env python3
-
-def main():
-    f = open("code.txt", "r")
-    txt = f.read()
-
-main()
